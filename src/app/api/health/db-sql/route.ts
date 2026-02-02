@@ -13,7 +13,8 @@ export async function GET() {
     const sql = getSql()
     type InfoRow = { db: string; now: string }
     const res = await sql<InfoRow>`select current_database() as db, now() as now`
-    const row: InfoRow | undefined = Array.isArray(res) ? res[0] : (res as FullQueryResults<InfoRow>).rows[0]
+    const rows: InfoRow[] = Array.isArray(res) ? res : (res as FullQueryResults<InfoRow>).rows
+    const [row] = rows
     return NextResponse.json({ ok: true, info: row ?? null })
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: e?.message || String(e) }, { status: 500 })
