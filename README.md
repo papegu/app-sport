@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# gym.local
 
-## Getting Started
+# Appli Sport – Gestion de salle de sport
 
-First, run the development server:
+Application Next.js (App Router) en TypeScript avec Tailwind, Auth (NextAuth), Prisma et PostgreSQL.
 
-```bash
+## Stack
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- Auth: NextAuth (Credentials)
+- Base: PostgreSQL
+- ORM: Prisma
+- Exports: PDF (jsPDF), Excel (xlsx)
+
+## Démarrage (local)
+1. Créez et renseignez `.env` (exemple Neon):
+```
+DATABASE_URL="postgresql://<user>:<password>@<neon-host>/<database>?sslmode=verify-full"
+DIRECT_URL="postgresql://<user>:<password>@<neon-host>/<database>?sslmode=verify-full"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="remplacez-par-un-secret-sécurisé"
+```
+Remplacez `<user>`, `<password>`, `<neon-host>` et `<database>` par vos valeurs Neon.
+Note SSL: nous explicitons `sslmode=verify-full` pour des garanties fortes. Pour compatibilité libpq, utilisez `uselibpqcompat=true&sslmode=require`.
+2. Générer Prisma et pousser le schéma:
+```
+npm run prisma:generate
+npm run db:push
+```
+3. Seed de données de démonstration:
+```
+npm run db:seed
+```
+4. Lancer le serveur:
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Utilisez `admin@gym.local` / `admin123` pour vous connecter.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## RBAC (rôles)
+- ADMIN: accès total
+- ACCUEIL: modules Membres, Abonnements, Paiements, Accès, Cours
+- DIRECTION: Dashboard et Rapports
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+La protection par rôle est appliquée via `middleware.ts`.
 
-## Learn More
+## Modules
+- Dashboard: statistiques rapides
+- Membres: CRUD + statut
+- Abonnements: création et renouvellement
+- Paiements: listing + reçus PDF
+- Accès: QR par membre + simulation scan
+- Cours: planning + présence
+- Rapports: métriques + export PDF/Excel
+- Paramètres: réservé admin
 
-To learn more about Next.js, take a look at the following resources:
+## Déploiement
+Compatible Vercel/VPS. Assurez-vous de renseigner les variables d'environnement et d'exécuter les migrations Prisma.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+- Les services SMS/Email sont mockés (à implémenter selon fournisseur).
+- Les reçus et exports sont générés côté client.
