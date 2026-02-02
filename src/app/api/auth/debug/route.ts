@@ -18,6 +18,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, cause: 'BAD_REQUEST' }, { status: 400 })
     }
 
+    // Explicit connectivity probe, isolated from Prisma model lookups
+    try {
+      const pong = await prisma.$queryRawUnsafe<any>('SELECT 1 as ok')
+      if (!pong || !Array.isArray(pong) || !(pong[0]?.ok === 1)) {
+        return NextResponse.json({ ok: false, cause: 'DB_ERROR', message: 'Ping failed' }, { status: 500 })
+      }
+    } catch (e: any) {
+      return NextResponse.json({ ok: false, cause: 'DB_ERROR', message: e?.message || String(e) }, { status: 500 })
+    }
+
     // Check DB connectivity and user state explicitly
     const user = await prisma.userSport.findUnique({ where: { email } })
     if (!user) {

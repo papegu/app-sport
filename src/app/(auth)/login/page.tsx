@@ -58,7 +58,7 @@ export default function LoginPage() {
       const debugCause = diag?.debug?.cause
       if (debugCause === 'USER_NOT_FOUND') setError('Utilisateur introuvable')
       else if (debugCause === 'INVALID_PASSWORD') setError('Mot de passe incorrect')
-      else if (debugCause === 'DB_ERROR') setError("Erreur de base de données")
+      else if (debugCause === 'DB_ERROR') setError(`Erreur de base de données: ${diag?.debug?.message || 'voir détails'}`)
       else if (debugCause === 'MISSING_ENV') setError("Configuration serveur incomplète")
       else setError('Identifiants invalides')
     } catch (err: any) {
