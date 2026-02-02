@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       data: { memberId, type, startDate: start, endDate: end, price: amount, status: 'SUSPENDU' },
     })
     const payment = await prisma.paymentSport.create({
-      data: { memberId, subscriptionId: subscription.id, amount: amount, method: 'PAYDUNYA', isPaid: false },
+      data: { memberId, subscriptionId: subscription.id, amount: amount, method: 'MOBILE_MONEY', isPaid: false },
     })
     const base = process.env.APP_BASE_URL || process.env.NEXTAUTH_URL || ''
     const returnUrl = `${base}/payments-status`

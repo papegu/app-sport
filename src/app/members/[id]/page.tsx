@@ -76,9 +76,9 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
     const subscription = await prisma.subscriptionSport.create({
       data: { memberId: memberId, type, startDate: start, endDate: end, price: amount, status: 'SUSPENDU' },
     })
-    // Create PayDunya payment intent
+    // Create PayDunya payment intent (recorded as Mobile Money)
     const payment = await prisma.paymentSport.create({
-      data: { memberId: memberId, subscriptionId: subscription.id, amount, method: 'PAYDUNYA', isPaid: false },
+      data: { memberId: memberId, subscriptionId: subscription.id, amount, method: 'MOBILE_MONEY', isPaid: false },
     })
     const base = process.env.APP_BASE_URL || process.env.NEXTAUTH_URL || ''
     const returnUrl = `${base}/payments-status`
