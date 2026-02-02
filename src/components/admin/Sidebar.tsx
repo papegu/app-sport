@@ -3,7 +3,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const items = [
-  { href: "/members", label: "Dashboard" },
+  { href: "/dashboard", label: "Dashboard" },
   { href: "/members", label: "Membres" },
   { href: "/subscriptions", label: "Abonnements" },
   { href: "/payments", label: "Paiements" },
@@ -18,11 +18,11 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
   const pathname = usePathname()
   const NavList = (
     <nav className="flex-1 px-2 py-3 space-y-1">
-      {items.map((item) => {
+      {items.map((item, i) => {
         const active = pathname.startsWith(item.href)
         return (
           <Link
-            key={item.href}
+            key={`${item.href}:${item.label}:${i}`}
             href={item.href}
             className={`block px-3 py-2 rounded text-sm ${active ? "bg-primary-50 text-primary-700" : "text-gray-700 hover:bg-gray-50"}`}
             onClick={onClose}
