@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint
+        run: |
+          npm run lint --if-present
+
+      - name: Build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+          PAYDUNYA_MASTER_KEY: ${{ secrets.PAYDUNYA_MASTER_KEY }}
+          PAYDUNYA_PUBLIC_KEY: ${{ secrets.PAYDUNYA_PUBLIC_KEY }}
+          PAYDUNYA_PRIVATE_KEY: ${{ secrets.PAYDUNYA_PRIVATE_KEY }}
+          PAYDUNYA_TOKEN: ${{ secrets.PAYDUNYA_TOKEN }}
+          PAYDUNYA_CALLBACK_URL: ${{ secrets.PAYDUNYA_CALLBACK_URL }}
+          PAYDUNYA_RETURN_URL: ${{ secrets.PAYDUNYA_RETURN_URL }}
+          PAYDUNYA_USE_MOCK: ${{ secrets.PAYDUNYA_USE_MOCK }}
+        run: npm run build
