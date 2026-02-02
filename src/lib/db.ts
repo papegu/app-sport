@@ -1,4 +1,5 @@
 import { neon, neonConfig } from '@neondatabase/serverless'
+import type { FullQueryResults } from '@neondatabase/serverless'
 
 // Ensure fetch connection caching for serverless/edge runtimes
 neonConfig.fetchConnectionCache = true
@@ -28,10 +29,19 @@ export function getSql() {
   return sqlSingleton
 }
 
+function isFullResults<T>(res: unknown): res is FullQueryResults<T> {
+  return !!res && typeof res === 'object' && 'rows' in (res as any) && Array.isArray((res as any).rows)
+}
+
 export async function pingDb() {
   const sql = getSql()
   // simple connectivity probe
-  const res = await sql`select 1 as ok`
-  const row = Array.isArray(res) ? (res as any[])[0] : (res as any)?.rows?.[0]
-  return !!row && row.ok === 1
+  const res = await sql<{ ok: number }>`select 1 as ok`
+  const rows: { ok: number }[] = Array.isArray(res)
+    ? res
+    : isFullResults<{ ok: number }>(res)
+    ? res.rows
+    : []
+  const [row] = rows
+  return !!row && Number(row.ok) === 1
 }
