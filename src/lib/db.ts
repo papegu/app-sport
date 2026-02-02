@@ -2,6 +2,8 @@ import { neon, neonConfig } from '@neondatabase/serverless'
 
 // Ensure fetch connection caching for serverless/edge runtimes
 neonConfig.fetchConnectionCache = true
+// Ensure result rows are returned (not full results); types remain union at compile time
+neonConfig.fullResults = false
 
 function ensureVerifyFull(url: string): string {
   if (!url) return url
@@ -29,6 +31,7 @@ export function getSql() {
 export async function pingDb() {
   const sql = getSql()
   // simple connectivity probe
-  const rows = await sql`select 1 as ok`
-  return rows?.[0]?.ok === 1
+  const res = await sql`select 1 as ok`
+  const row = Array.isArray(res) ? (res as any[])[0] : (res as any)?.rows?.[0]
+  return !!row && row.ok === 1
 }
