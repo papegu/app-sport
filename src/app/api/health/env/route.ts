@@ -1,3 +1,4 @@
+export const runtime = 'nodejs'
 export async function GET() {
   const hasDb = !!process.env.DATABASE_URL && process.env.DATABASE_URL.trim().length > 0
   const hasSecret = !!process.env.NEXTAUTH_SECRET && process.env.NEXTAUTH_SECRET.trim().length > 0

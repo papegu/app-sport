@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+export const runtime = 'nodejs'
 
 export async function GET() {
   const data = await prisma.paymentSport.findMany({

@@ -1,3 +1,4 @@
+export const runtime = 'nodejs'
 export async function GET() {
   const body = {
     commit: process.env.VERCEL_GIT_COMMIT_SHA || process.env.GITHUB_SHA || null,
