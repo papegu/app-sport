@@ -17,28 +17,17 @@ export async function GET() {
       return NextResponse.json({ ok: false, error: 'PING_FAILED' }, { status: 500 })
     }
     const sql = getSql()
+    type RowType = { db: string; now: string }
     const res = await sql`select current_database() as db, now() as now`
-    let info: InfoRow | null = null
+    let row: RowType | undefined
+    type RowsResult<T> = { rows: T[] }
     if (Array.isArray(res)) {
-      const first = res[0]
-      if (Array.isArray(first)) {
-        info = { db: String(first[0]), now: String(first[1]) }
-      } else if (first && typeof first === 'object') {
-        const obj = first as any
-        info = { db: String(obj.db), now: String(obj.now) }
-      }
-    } else if (isFullResults(res)) {
-      const first = res.rows?.[0]
-      if (Array.isArray(first)) {
-        info = { db: String(first[0]), now: String(first[1]) }
-      } else if (first && typeof first === 'object') {
-        info = { db: String((first as any).db), now: String((first as any).now) }
-      }
+      row = (res as RowType[])[0]
+    } else {
+      row = (res as unknown as RowsResult<RowType>).rows[0]
     }
-    return info
-      ? NextResponse.json({ ok: true, info })
-      : NextResponse.json({ ok: false, error: 'NO_ROWS' }, { status: 500 })
+    return NextResponse.json({ ok: true, info: row ?? null })
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: e?.message || String(e) }, { status: 500 })
+    return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : String(e) }, { status: 500 })
   }
 }
