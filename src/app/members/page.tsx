@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic'
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
-
-export const dynamic = 'force-dynamic'
 
 async function getMembers(q?: string) {
   const where = q

@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic'
 import { revalidatePath } from 'next/cache'
 import QRCode from 'qrcode'
-
-export const dynamic = 'force-dynamic'
 
 async function finalize(sessionId: string) {
   'use server'

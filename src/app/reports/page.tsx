@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic'
 import ExportButtons from './export-buttons'
 
 export default async function ReportsPage() {

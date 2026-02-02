@@ -3,7 +3,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const items = [
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/members", label: "Dashboard" },
   { href: "/members", label: "Membres" },
   { href: "/subscriptions", label: "Abonnements" },
   { href: "/payments", label: "Paiements" },
@@ -39,7 +39,7 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
       {/* Desktop */}
       <aside className="hidden md:flex md:flex-col w-64 border-r bg-white">
         <div className="px-4 py-4 border-b">
-          <Link href="/dashboard" className="text-xl font-bold text-primary-700">Appli Sport</Link>
+          <Link href="/members" className="text-xl font-bold text-primary-700">Appli Sport</Link>
         </div>
         {NavList}
       </aside>
@@ -49,7 +49,7 @@ export default function Sidebar({ open, onClose }: { open?: boolean; onClose?: (
           <div className="absolute inset-0 bg-black/30" onClick={onClose} />
           <aside className="absolute left-0 top-0 h-full w-72 bg-white border-r shadow flex flex-col">
             <div className="px-4 py-4 border-b flex items-center justify-between">
-              <Link href="/dashboard" className="text-lg font-bold text-primary-700" onClick={onClose}>Appli Sport</Link>
+              <Link href="/members" className="text-lg font-bold text-primary-700" onClick={onClose}>Appli Sport</Link>
               <button aria-label="Fermer" className="text-gray-600" onClick={onClose}>✕</button>
             </div>
             {NavList}

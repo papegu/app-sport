@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma'
+export const dynamic = 'force-dynamic'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-
-export const dynamic = 'force-dynamic'
 
 function computeEndDate(type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'TRIMESTRIEL' | 'ANNUEL') {
   const now = new Date()
