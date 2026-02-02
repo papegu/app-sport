@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model UserSport {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      RoleSport
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([email])
+}
+
+model MemberSport {
+  id            String              @id @default(cuid())
+  firstName     String
+  lastName      String
+  phone         String              @unique
+  email         String?             @unique
+  photoUrl      String?
+  status        MemberStatusSport   @default(ACTIF)
+  accountType   AccountTypeSport    @default(USER_SIMPLE)
+  qrCode        String              @unique
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  address       String?
+  accessLogs    AccessLogSport[]
+  attendances   AttendanceSport[]
+  notifications NotificationSport[]
+  payments      PaymentSport[]
+  subscriptions SubscriptionSport[]
+
+  @@index([lastName, firstName])
+  @@index([status])
+}
+
+model SubscriptionSport {
+  id        String                  @id @default(cuid())
+  memberId  String
+  type      SubscriptionTypeSport
+  startDate DateTime
+  endDate   DateTime
+  status    SubscriptionStatusSport @default(ACTIF)
+  price     Decimal                 @db.Decimal(10, 2)
+  createdAt DateTime                @default(now())
+  payments  PaymentSport[]
+  member    MemberSport             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([status, endDate])
+}
+
+model PaymentSport {
+  id             String             @id @default(cuid())
+  memberId       String
+  subscriptionId String?
+  amount         Decimal            @db.Decimal(10, 2)
+  method         PaymentMethodSport
+  date           DateTime           @default(now())
+  isPaid         Boolean            @default(true)
+  receiptNumber  String?
+  member         MemberSport        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  subscription   SubscriptionSport? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([memberId])
+  @@index([subscriptionId])
+  @@index([date])
+}
+
+model ClassSport {
+  id              String            @id @default(cuid())
+  name            String
+  description     String?
+  dayOfWeek       Int
+  startTime       String
+  endTime         String
+  maxParticipants Int               @default(20)
+  coachName       String
+  createdAt       DateTime          @default(now())
+  attendances     AttendanceSport[]
+
+  @@index([dayOfWeek])
+}
+
+model AttendanceSport {
+  id        String      @id @default(cuid())
+  memberId  String
+  classId   String?
+  timestamp DateTime    @default(now())
+  klass     ClassSport? @relation(fields: [classId], references: [id])
+  member    MemberSport @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([classId])
+  @@index([timestamp])
+}
+
+model AccessLogSport {
+  id        String      @id @default(cuid())
+  memberId  String
+  timestamp DateTime    @default(now())
+  allowed   Boolean
+  reason    String?
+  member    MemberSport @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([memberId])
+  @@index([timestamp])
+}
+
+model NotificationSport {
+  id          String                  @id @default(cuid())
+  memberId    String?
+  type        NotificationTypeSport
+  content     String
+  status      NotificationStatusSport @default(EN_ATTENTE)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  createdAt   DateTime                @default(now())
+  member      MemberSport?            @relation(fields: [memberId], references: [id])
+
+  @@index([memberId])
+  @@index([status])
+}
+
+model PriceConfigSport {
+  id     String                @id @default(cuid())
+  type   SubscriptionTypeSport @unique
+  amount Decimal               @db.Decimal(10, 2)
+}
+
+enum RoleSport {
+  ADMIN
+  ACCUEIL
+  DIRECTION
+}
+
+enum MemberStatusSport {
+  ACTIF
+  EXPIRE
+  SUSPENDU
+}
+
+enum SubscriptionTypeSport {
+  MENSUEL
+  TRIMESTRIEL
+  ANNUEL
+  SEANCE
+  SEMAINE
+}
+
+enum SubscriptionStatusSport {
+  ACTIF
+  EXPIRE
+  SUSPENDU
+}
+
+enum PaymentMethodSport {
+  ESPECES
+  MOBILE_MONEY
+  CARTE
+  WAVE
+}
+
+enum NotificationTypeSport {
+  EMAIL
+  SMS
+}
+
+enum NotificationStatusSport {
+  EN_ATTENTE
+  ENVOYE
+}
+
+enum AccountTypeSport {
+  ADMINISTRATEUR
+  USER_SIMPLE
+  CLIENT_ASSIDU
+}
