@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand base inspired by provided image */
+  /* Brand base inspired by Gabon flag (public/images/gabon.jpg) */
   --background: #f8f8f8; /* light neutral */
   --foreground: #171717; /* near-black */
-  --brand-primary: #c4002f; /* deep red */
-  --brand-secondary: #222222; /* charcoal */
-  --brand-accent: #ffcc00; /* warm accent (optional) */
+  --brand-primary: #009E60; /* Gabon green */
+  --brand-secondary: #1F57A4; /* Gabon blue (accessible) */
+  --brand-accent: #FCD116; /* Gabon gold */
 }
 
 @theme inline {
@@ -14,29 +14,41 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  /* Primary mapped to brand deep red palette */
-  --color-primary-50: #fef2f2;
-  --color-primary-100: #fee2e2;
-  --color-primary-200: #fecaca;
-  --color-primary-300: #fca5a5;
-  --color-primary-400: #f87171;
+  /* Primary mapped to Gabon green scale */
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
   --color-primary-500: var(--brand-primary);
-  --color-primary-600: #b8002a;
-  --color-primary-700: #990024;
-  --color-primary-800: #7a001d;
-  --color-primary-900: #5c0016;
+  --color-primary-600: #008a56;
+  --color-primary-700: #00754a;
+  --color-primary-800: #00603e;
+  --color-primary-900: #004b32;
 
-  /* Accent mapped to charcoal greys */
-  --color-accent-50: #f9fafb;
-  --color-accent-100: #f3f4f6;
-  --color-accent-200: #e5e7eb;
-  --color-accent-300: #d1d5db;
-  --color-accent-400: #9ca3af;
+  /* Accent mapped to Gabon blue scale */
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
   --color-accent-500: var(--brand-secondary);
-  --color-accent-600: #1f2937;
-  --color-accent-700: #111827;
-  --color-accent-800: #0f172a;
-  --color-accent-900: #0b1220;
+  --color-accent-600: #1b4c94;
+  --color-accent-700: #163f7c;
+  --color-accent-800: #123365;
+  --color-accent-900: #0d274e;
+
+  /* Highlight mapped to Gabon gold (optional usage) */
+  --color-highlight-50: #fffbeb;
+  --color-highlight-100: #fef3c7;
+  --color-highlight-200: #fde68a;
+  --color-highlight-300: #fcd34d;
+  --color-highlight-400: #fbbf24;
+  --color-highlight-500: var(--brand-accent);
+  --color-highlight-600: #e0b90f;
+  --color-highlight-700: #c49e0d;
+  --color-highlight-800: #a8850b;
+  --color-highlight-900: #8b6c09;
 }
 
 @media (prefers-color-scheme: dark) {

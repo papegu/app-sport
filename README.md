@@ -70,13 +70,16 @@ Compatible Vercel/VPS. Assurez-vous de renseigner les variables d'environnement 
 - Les reçus et exports sont générés côté client.
 
 ## Charte Graphique (logo et couleurs)
-- Logo: image distante autorisée via Next Image depuis `ih1.redbubble.net` (voir [src/components/Nav.tsx](src/components/Nav.tsx)).
-- Couleurs:
-	- Fond: `#f8f8f8` (neutre clair)
-	- Primaire: `#c4002f` (rouge profond)
-	- Secondaire/Accent: `#222222` (charcoal)
+- Logo: image locale basée sur le drapeau du Gabon ([public/images/gabon.jpg](public/images/gabon.jpg)), utilisée dans [src/components/Nav.tsx](src/components/Nav.tsx).
+- Palette (drapeau du Gabon):
+	- Primaire (Vert): `#009E60`
+	- Accent (Bleu): `#1F57A4`
+	- Highlight (Or): `#FCD116`
+	- Fond neutre: `#f8f8f8`
+	- Texte: `#171717`
 - Implémentation:
-	- Variables CSS définies dans [src/app/globals.css](src/app/globals.css) (`--brand-*`) et mappées au thème Tailwind (`--color-primary-*`, `--color-accent-*`).
-	- Les éléments utilisant `text-primary-*`, `bg-primary-*`, `border-primary-*` adoptent automatiquement la nouvelle palette.
+	- Variables CSS dans [src/app/globals.css](src/app/globals.css): `--brand-primary` (vert), `--brand-secondary` (bleu), `--brand-accent` (or).
+	- Mappage Tailwind v4: `--color-primary-*` (vert), `--color-accent-*` (bleu), `--color-highlight-*` (or).
+	- Les classes `text-primary-*`, `bg-primary-*`, `border-primary-*` appliquent le vert; `*-accent-*` appliquent le bleu; `*-highlight-*` disponibles pour des touches d’or.
 
-Note droits: le logo est chargé depuis une URL externe. Assurez-vous de disposer des droits d'utilisation commerciale avant de l'intégrer définitivement. Nous pouvons remplacer par un fichier local dans `public/` à tout moment.
+Note droits: l’image du drapeau est un symbole national. Vérifiez les contraintes d’usage selon votre contexte (usage non commercial recommandé pour cet actif).

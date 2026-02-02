@@ -13,11 +13,11 @@ export default function Nav() {
         <div className="flex gap-4 items-center">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Image
-              src="https://ih1.redbubble.net/image.5026521516.1788/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg"
-              alt="Logo Appli Sport"
+              src="/images/gabon.jpg"
+              alt="Logo Appli Sport – Gabon"
               width={36}
               height={36}
-              className="rounded-sm object-cover"
+              className="rounded-sm object-cover ring-1 ring-accent-200"
               priority
             />
             <span className="font-semibold text-primary-700">Appli Sport</span>
