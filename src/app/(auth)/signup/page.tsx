@@ -56,9 +56,9 @@ async function startSignup(formData: FormData) {
     data: { memberId: member.id, type, startDate: start, endDate: end, price, status: 'SUSPENDU' },
   })
 
-  // Create a payment intent (Mobile Money via PayDunya), unpaid
+  // Create a payment intent (PayDunya), unpaid
   const payment = await prisma.paymentSport.create({
-    data: { memberId: member.id, subscriptionId: subscription.id, amount: price, method: 'MOBILE_MONEY', isPaid: false },
+    data: { memberId: member.id, subscriptionId: subscription.id, amount: price, method: 'PAYDUNYA', isPaid: false },
   })
 
   // Build return/callback URLs

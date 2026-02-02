@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic'
 import ExportButtons from './export-buttons'
+import RevenueStats from './revenue-stats'
 
 export default async function ReportsPage() {
   const activeMembers = await prisma.memberSport.count({ where: { status: 'ACTIF' } })
@@ -36,6 +37,11 @@ export default async function ReportsPage() {
         <Card title="Fréquentation (jour)" value={frequentation} accent="primary" />
         <Card title="CA (jour)" value={data.revenueDay} accent="accent" />
         <Card title="CA (mois)" value={data.revenueMonth} accent="primary" />
+      </div>
+      <div>
+        <h2 className="text-lg font-medium text-gray-800">Chiffre d'affaires détaillé</h2>
+        <p className="text-sm text-gray-600 mb-2">Sommes encaissées par jour, par mois, par année et par intervalle de dates.</p>
+        <RevenueStats />
       </div>
       <ExportButtons data={data} />
     </div>

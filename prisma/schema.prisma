@@ -167,6 +167,7 @@ enum PaymentMethodSport {
   MOBILE_MONEY
   CARTE
   WAVE
+  PAYDUNYA
 }
 
 enum NotificationTypeSport {
