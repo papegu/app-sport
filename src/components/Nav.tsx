@@ -1,6 +1,7 @@
 "use client"
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
 
 export default function Nav() {
   const { data } = useSession()
@@ -10,7 +11,17 @@ export default function Nav() {
     <header className="border-b bg-white">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex gap-4 items-center">
-          <Link href="/dashboard" className="font-semibold text-primary-700">Appli Sport</Link>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <Image
+              src="https://ih1.redbubble.net/image.5026521516.1788/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg"
+              alt="Logo Appli Sport"
+              width={36}
+              height={36}
+              className="rounded-sm object-cover"
+              priority
+            />
+            <span className="font-semibold text-primary-700">Appli Sport</span>
+          </Link>
           <nav className="flex gap-3 text-sm">
             <Link href="/dashboard">Dashboard</Link>
             {(role === 'ADMIN' || role === 'ACCUEIL') && (

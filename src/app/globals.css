@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  /* Light yellow background for Senegal-livres style */
-  --background: #FFF9E6;
-  --foreground: #171717;
+  /* Brand base inspired by provided image */
+  --background: #f8f8f8; /* light neutral */
+  --foreground: #171717; /* near-black */
+  --brand-primary: #c4002f; /* deep red */
+  --brand-secondary: #222222; /* charcoal */
+  --brand-accent: #ffcc00; /* warm accent (optional) */
 }
 
 @theme inline {
@@ -11,29 +14,29 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  /* Sport theme colors (greens + reds + yellow background) */
-  --color-primary-50: #ecfdf5;
-  --color-primary-100: #d1fae5;
-  --color-primary-200: #a7f3d0;
-  --color-primary-300: #6ee7b7;
-  --color-primary-400: #34d399;
-  --color-primary-500: #10b981; /* emerald */
-  --color-primary-600: #059669;
-  --color-primary-700: #047857;
-  --color-primary-800: #065f46;
-  --color-primary-900: #064e3b;
+  /* Primary mapped to brand deep red palette */
+  --color-primary-50: #fef2f2;
+  --color-primary-100: #fee2e2;
+  --color-primary-200: #fecaca;
+  --color-primary-300: #fca5a5;
+  --color-primary-400: #f87171;
+  --color-primary-500: var(--brand-primary);
+  --color-primary-600: #b8002a;
+  --color-primary-700: #990024;
+  --color-primary-800: #7a001d;
+  --color-primary-900: #5c0016;
 
-  /* Accent now uses a red palette */
-  --color-accent-50: #fef2f2;
-  --color-accent-100: #fee2e2;
-  --color-accent-200: #fecaca;
-  --color-accent-300: #fca5a5;
-  --color-accent-400: #f87171;
-  --color-accent-500: #ef4444; /* red */
-  --color-accent-600: #dc2626;
-  --color-accent-700: #b91c1c;
-  --color-accent-800: #991b1b;
-  --color-accent-900: #7f1d1d;
+  /* Accent mapped to charcoal greys */
+  --color-accent-50: #f9fafb;
+  --color-accent-100: #f3f4f6;
+  --color-accent-200: #e5e7eb;
+  --color-accent-300: #d1d5db;
+  --color-accent-400: #9ca3af;
+  --color-accent-500: var(--brand-secondary);
+  --color-accent-600: #1f2937;
+  --color-accent-700: #111827;
+  --color-accent-800: #0f172a;
+  --color-accent-900: #0b1220;
 }
 
 @media (prefers-color-scheme: dark) {
