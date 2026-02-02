@@ -11,9 +11,8 @@ export async function GET() {
     }
     const sql = getSql()
     type InfoRow = { db: string; now: string }
-    const res = await sql<InfoRow[]>`select current_database() as db, now() as now`
-    const row = Array.isArray(res) ? (res as any[])[0] : (res as any)?.rows?.[0]
-    return NextResponse.json({ ok: true, info: row ?? null })
+    const res = (await sql`select current_database() as db, now() as now`) as unknown as InfoRow[]
+    return NextResponse.json({ ok: true, info: res?.[0] ?? null })
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: e?.message || String(e) }, { status: 500 })
   }
