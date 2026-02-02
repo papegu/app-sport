@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { createCheckout } from '@/lib/paydunya'
 
 function computeEndDate(type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'TRIMESTRIEL' | 'ANNUEL') {
   const now = new Date()
@@ -68,11 +70,21 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
   async function quickPayment(type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'ANNUEL') {
     'use server'
     const cfg = await prisma.priceConfigSport.findUnique({ where: { type } })
-    const d = { amount: String(cfg?.amount ?? (type === 'SEANCE' ? '5.00' : type === 'SEMAINE' ? '12.00' : type === 'MENSUEL' ? '30.00' : '300.00')), method: 'WAVE' as const }
-    await prisma.paymentSport.create({
-      data: { memberId: memberId, amount: d.amount, method: d.method },
+    const amount = String(cfg?.amount ?? (type === 'SEANCE' ? '5.00' : type === 'SEMAINE' ? '12.00' : type === 'MENSUEL' ? '30.00' : '300.00'))
+    const { start, end } = computeEndDate(type)
+    // Create a pending subscription for this quick payment
+    const subscription = await prisma.subscriptionSport.create({
+      data: { memberId: memberId, type, startDate: start, endDate: end, price: amount, status: 'SUSPENDU' },
     })
-    revalidatePath(`/members/${memberId}`)
+    // Create PayDunya payment intent
+    const payment = await prisma.paymentSport.create({
+      data: { memberId: memberId, subscriptionId: subscription.id, amount, method: 'PAYDUNYA', isPaid: false },
+    })
+    const base = process.env.APP_BASE_URL || process.env.NEXTAUTH_URL || ''
+    const returnUrl = `${base}/payments-status`
+    const callbackUrl = `${base}/api/payments/callback`
+    const checkout = await createCheckout({ amount, description: `Paiement ${type}`, sessionId: payment.id, returnUrl, callbackUrl })
+    redirect(checkout.url)
   }
 
   return (

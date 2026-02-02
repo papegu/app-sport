@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 export const dynamic = 'force-dynamic'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { createCheckout } from '@/lib/paydunya'
 
 function computeEndDate(type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'TRIMESTRIEL' | 'ANNUEL') {
   const now = new Date()
@@ -55,14 +56,19 @@ async function startSignup(formData: FormData) {
     data: { memberId: member.id, type, startDate: start, endDate: end, price, status: 'SUSPENDU' },
   })
 
-  // Create a payment intent (Wave), unpaid
+  // Create a payment intent (PayDunya), unpaid
   const payment = await prisma.paymentSport.create({
-    data: { memberId: member.id, subscriptionId: subscription.id, amount: price, method: 'WAVE', isPaid: false },
+    data: { memberId: member.id, subscriptionId: subscription.id, amount: price, method: 'PAYDUNYA', isPaid: false },
   })
 
+  // Build return/callback URLs
+  const base = process.env.APP_BASE_URL || process.env.NEXTAUTH_URL || ''
+  const returnUrl = `${base}/payments-status`
+  const callbackUrl = `${base}/api/payments/callback`
+  const checkout = await createCheckout({ amount: price, description: `Abonnement ${type}`, sessionId: payment.id, returnUrl, callbackUrl })
+
   revalidatePath('/payments-status')
-  // Redirect to payment status page; in production, Wave callback would hit /api/payments/callback then redirect here
-  redirect(`/payments-status?status=success&session=${payment.id}`)
+  redirect(checkout.url)
 }
 
 export default function SignupPage() {
