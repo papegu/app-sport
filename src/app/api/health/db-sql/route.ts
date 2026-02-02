@@ -17,17 +17,16 @@ export async function GET() {
       return NextResponse.json({ ok: false, error: 'PING_FAILED' }, { status: 500 })
     }
     const sql = getSql()
-    const res = await sql<InfoRow>`select current_database() as db, now() as now`
-    const rows: InfoRow[] = Array.isArray(res)
-      ? res
-      : isFullResults<InfoRow>(res)
-      ? res.rows
-      : []
-    if (!rows.length) {
-      return NextResponse.json({ ok: false, error: 'NO_ROWS' }, { status: 500 })
-    }
-    const [row] = rows
-    return NextResponse.json({ ok: true, info: row })
+      const res = await sql<InfoRow>`select current_database() as db, now() as now`
+      const rows: InfoRow[] = Array.isArray(res)
+        ? res
+        : isFullResults<InfoRow>(res)
+        ? res.rows
+        : []
+      const [row] = rows
+      return row
+        ? NextResponse.json({ ok: true, info: row })
+        : NextResponse.json({ ok: false, error: 'NO_ROWS' }, { status: 500 })
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: e?.message || String(e) }, { status: 500 })
   }
