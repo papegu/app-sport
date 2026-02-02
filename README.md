@@ -1,5 +1,8 @@
 # gym.local
 
+[![CI](https://github.com/papegu/app-sport/actions/workflows/ci.yml/badge.svg)](https://github.com/papegu/app-sport/actions/workflows/ci.yml)
+[![Preview Deploy](https://github.com/papegu/app-sport/actions/workflows/vercel-preview.yml/badge.svg)](https://github.com/papegu/app-sport/actions/workflows/vercel-preview.yml)
+
 # Appli Sport – Gestion de salle de sport
 
 Application Next.js (App Router) en TypeScript avec Tailwind, Auth (NextAuth), Prisma et PostgreSQL.
