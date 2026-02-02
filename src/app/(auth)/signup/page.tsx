@@ -89,7 +89,7 @@ export default function SignupPage() {
           <option value="TRIMESTRIEL">Trimestriel</option>
           <option value="ANNUEL">Annuel</option>
         </select>
-        <button className="bg-primary-600 hover:bg-primary-700 text-white rounded p-2">Procéder au paiement</button>
+        <button className="bg-highlight-600 hover:bg-highlight-700 text-white rounded p-2">Procéder au paiement</button>
       </form>
     </div>
   )

@@ -111,13 +111,13 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
           <button className="w-full bg-gray-800 hover:bg-gray-900 text-white rounded p-2">Paiement journalier</button>
         </form>
         <form action={quickPayment.bind(null, 'SEMAINE')}>
-          <button className="w-full bg-amber-600 hover:bg-amber-700 text-white rounded p-2">Paiement hebdomadaire</button>
+          <button className="w-full bg-highlight-600 hover:bg-highlight-700 text-white rounded p-2">Paiement hebdomadaire</button>
         </form>
         <form action={quickPayment.bind(null, 'MENSUEL')}>
           <button className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded p-2">Paiement mensuel</button>
         </form>
         <form action={quickPayment.bind(null, 'ANNUEL')}>
-          <button className="w-full bg-sky-600 hover:bg-sky-700 text-white rounded p-2">Paiement annuel</button>
+          <button className="w-full bg-accent-600 hover:bg-accent-700 text-white rounded p-2">Paiement annuel</button>
         </form>
       </div>
 
