@@ -35,6 +35,7 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
   if (!member) {
     return <div className="p-4">Membre introuvable.</div>
   }
+  const memberId = member.id
 
   async function addOrRenewSubscription(formData: FormData) {
     'use server'
@@ -44,25 +45,25 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
     const price = String(formData.get('price') || cfg?.amount || '0.00')
     const { start, end } = computeEndDate(type)
     await prisma.subscriptionSport.create({
-      data: { memberId: member.id, type, startDate: start, endDate: end, price },
+      data: { memberId: memberId, type, startDate: start, endDate: end, price },
     })
-    revalidatePath(`/members/${member.id}`)
+    revalidatePath(`/members/${memberId}`)
   }
 
   async function addPayment(formData: FormData) {
     'use server'
     const amountStr = String(formData.get('amount') || '')
     const subscriptionId = String(formData.get('subscriptionId') || '') || undefined
-    if (!amountStr || !method) return
+    if (!amountStr) return
     await prisma.paymentSport.create({
       data: {
-        memberId: member.id,
+        memberId: memberId,
         subscriptionId: subscriptionId || undefined,
         amount: amountStr,
         method: 'WAVE',
       },
     })
-    revalidatePath(`/members/${member.id}`)
+    revalidatePath(`/members/${memberId}`)
   }
 
   async function quickPayment(type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'ANNUEL') {
@@ -70,9 +71,9 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
     const cfg = await prisma.priceConfigSport.findUnique({ where: { type } })
     const d = { amount: String(cfg?.amount ?? (type === 'SEANCE' ? '5.00' : type === 'SEMAINE' ? '12.00' : type === 'MENSUEL' ? '30.00' : '300.00')), method: 'WAVE' as const }
     await prisma.paymentSport.create({
-      data: { memberId: member.id, amount: d.amount, method: d.method },
+      data: { memberId: memberId, amount: d.amount, method: d.method },
     })
-    revalidatePath(`/members/${member.id}`)
+    revalidatePath(`/members/${memberId}`)
   }
 
   return (
@@ -131,7 +132,7 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
               {member.subscriptions.map((s) => (
                 <li key={s.id} className="flex justify-between">
                   <span>
-                    {s.type} — du {new Date(s.startDate).toLocaleDateString()} au {new Date(s.endDate).toLocaleDateString()} — {s.price} 
+                    {s.type} — du {new Date(s.startDate).toLocaleDateString()} au {new Date(s.endDate).toLocaleDateString()} — {s.price.toString()} 
                   </span>
                   <span className="text-xs text-gray-500">{s.status}</span>
                 </li>
@@ -165,7 +166,7 @@ export default async function MemberDetailPage({ params }: { params: { id: strin
               {member.payments.map((p) => (
                 <li key={p.id} className="flex justify-between">
                   <span>
-                    {p.amount} — {p.method} — {new Date(p.date).toLocaleString()}
+                    {p.amount.toString()} — {p.method} — {new Date(p.date).toLocaleString()}
                   </span>
                   <span className="text-xs text-gray-500">{p.isPaid ? 'Payé' : 'À payer'}</span>
                 </li>

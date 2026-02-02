@@ -8,9 +8,9 @@ async function getMembers(q?: string) {
   const where = q
     ? {
         OR: [
-          { firstName: { contains: q, mode: 'insensitive' } },
-          { lastName: { contains: q, mode: 'insensitive' } },
-          { email: { contains: q, mode: 'insensitive' } },
+          { firstName: { contains: q, mode: 'insensitive' as any } },
+          { lastName: { contains: q, mode: 'insensitive' as any } },
+          { email: { contains: q, mode: 'insensitive' as any } },
         ],
       }
     : undefined
@@ -113,7 +113,7 @@ async function createMember(formData: FormData) {
   revalidatePath('/members')
 }
 
-async function quickPay(memberId: string, type: 'SEANCE' | 'MENSUEL' | 'ANNUEL') {
+async function quickPay(memberId: string, type: 'SEANCE' | 'SEMAINE' | 'MENSUEL' | 'ANNUEL') {
   'use server'
   // Lookup price config, fallback to defaults
   const cfg = await prisma.priceConfigSport.findUnique({ where: { type: type as any } })
