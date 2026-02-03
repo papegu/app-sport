@@ -20,8 +20,9 @@ export async function POST(req: Request) {
 
     // Explicit connectivity probe, isolated from Prisma model lookups
     try {
-      const pong = await prisma.$queryRawUnsafe<any>('SELECT 1 as ok')
-      if (!pong || !Array.isArray(pong) || !(pong[0]?.ok === 1)) {
+      const pong = await prisma.$queryRaw<{ ok: number }[]>`SELECT 1 as ok`
+      const first = pong?.[0]
+      if (!first || Number(first.ok) !== 1) {
         return NextResponse.json({ ok: false, cause: 'DB_ERROR', message: 'Ping failed' }, { status: 500 })
       }
     } catch (e: any) {

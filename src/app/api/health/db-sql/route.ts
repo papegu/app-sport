@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSql, pingDb } from '@/lib/db'
 import type { FullQueryResults } from '@neondatabase/serverless'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 type InfoRow = { db: string; now: string }
 
@@ -19,13 +19,16 @@ export async function GET() {
     const sql = getSql()
     type RowType = { db: string; now: string }
     const res = await sql`select current_database() as db, now() as now`
+
     let row: RowType | undefined
-    type RowsResult<T> = { rows: T[] }
     if (Array.isArray(res)) {
-      row = (res as RowType[])[0]
-    } else {
-      row = (res as unknown as RowsResult<RowType>).rows[0]
+      const first = (res as RowType[])[0]
+      row = first ? { db: String(first.db), now: String(first.now) } : undefined
+    } else if (isFullResults(res)) {
+      const first = (res.rows as unknown as RowType[])[0]
+      row = first ? { db: String(first.db), now: String(first.now) } : undefined
     }
+
     return NextResponse.json({ ok: true, info: row ?? null })
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: e instanceof Error ? e.message : String(e) }, { status: 500 })
