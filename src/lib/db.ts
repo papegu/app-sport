@@ -8,10 +8,13 @@ function ensureVerifyFull(url: string): string {
   if (!url) return url
   const hasQuery = url.includes('?')
   const sslRegex = /([?&])sslmode=([^&#]*)/i
+  // Remove libpq-only flags that are not supported in fetch drivers
+  url = url.replace(/([?&])channel_binding=[^&#]*/i, '$1')
   if (sslRegex.test(url)) {
     return url.replace(sslRegex, (_m, sep) => `${sep}sslmode=verify-full`)
   }
-  return `${url}${hasQuery ? '&' : '?'}sslmode=verify-full`
+  const out = `${url}${hasQuery ? '&' : '?'}sslmode=verify-full`
+  return out.replace(/[?&]$/, '')
 }
 
 let sqlSingleton: ReturnType<typeof neon> | null = null

@@ -6,11 +6,18 @@ import { PrismaNeon } from '@prisma/adapter-neon'
 
 function ensureSecureSSL(url: string): string {
   if (!url) return url
+  // Remove libpq-only flags that break fetch-based drivers
+  url = url.replace(/([?&])channel_binding=[^&#]*/i, '$1')
+  // Normalize sslmode to verify-full
   if (url.includes('sslmode=')) {
-    return url.replace(/sslmode=(?:disable|allow|prefer|require|verify-ca|verify-full)/i, 'sslmode=verify-full')
+    url = url.replace(/sslmode=(?:disable|allow|prefer|require|verify-ca|verify-full)/i, 'sslmode=verify-full')
+  } else {
+    const sep = url.includes('?') ? '&' : '?'
+    url = `${url}${sep}sslmode=verify-full`
   }
-  const sep = url.includes('?') ? '&' : '?'
-  return `${url}${sep}sslmode=verify-full`
+  // Clean any trailing ? or & left by removals
+  url = url.replace(/[?&]$/,'')
+  return url
 }
 
 function createPrisma(): PrismaClient {

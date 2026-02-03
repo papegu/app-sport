@@ -7,6 +7,8 @@ function ensureVerifyFull(url: string): string {
   if (!url) return url
   const hasQuery = url.includes('?')
   const sslRegex = /([?&])sslmode=([^&#]*)/i
+  // Remove libpq-only flags unsupported by fetch-based drivers
+  url = url.replace(/([?&])channel_binding=[^&#]*/i, '$1')
   if (sslRegex.test(url)) {
     return url.replace(sslRegex, (_m, sep) => `${sep}sslmode=verify-full`)
   }
