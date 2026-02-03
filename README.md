@@ -80,6 +80,17 @@ Compatible Vercel/VPS. Assurez-vous de renseigner les variables d'environnement 
 
 Après sauvegarde, redeployez la branche `main`.
 
+Astuce CLI (optionnel):
+Si vous préférez déployer via CLI, lancez depuis le sous-dossier `applisport`:
+
+```
+npm i -g vercel
+vercel link --cwd applisport
+vercel --prod --cwd applisport
+```
+
+Note: La configuration "Root Directory" côté Vercel Dashboard reste requise pour les déploiements Git.
+
 ### Vérifications production
 Après déploiement, vérifiez que les endpoints répondent:
 
