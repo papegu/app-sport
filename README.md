@@ -65,6 +65,32 @@ La protection par rôle est appliquée via `middleware.ts`.
 ## Déploiement
 Compatible Vercel/VPS. Assurez-vous de renseigner les variables d'environnement et d'exécuter les migrations Prisma.
 
+### Vercel (monorepo: sous-dossier `applisport`)
+- Root Directory: définissez-le sur `applisport` dans Vercel → Project Settings → General → Root Directory, puis « Save ».
+- Framework Preset: Next.js (détecté automatiquement).
+- Build Command: laissez vide ou `npm run build` (dans `applisport`).
+- Install Command: laissez vide ou `npm ci`.
+- Output: auto (Next.js). Ne pas fixer manuellement.
+- Variables d’environnement (Project Settings → Environment Variables):
+	- `NEXTAUTH_URL` = `https://<votre-domaine>`
+	- `NEXTAUTH_SECRET` = valeur aléatoire forte
+	- `DATABASE_URL` = URL Postgres (Neon), avec `sslmode=verify-full`
+	- `DIRECT_URL` = même valeur que `DATABASE_URL` (ou URL directe Postgres), avec SSL
+	- (Optionnel) clés PayDunya si passage en réel
+
+Après sauvegarde, redeployez la branche `main`.
+
+### Vérifications production
+Après déploiement, vérifiez que les endpoints répondent:
+
+```
+curl -sSf https://<votre-domaine>/api/version
+curl -sSf https://<votre-domaine>/api/health/env
+curl -sSf https://<votre-domaine>/api/health/db
+```
+
+La page `/login` doit être accessible (redirigée depuis `/`). Si vous obtenez `404 NOT_FOUND`, c’est quasi toujours un Root Directory mal configuré (le projet Vercel pointe la racine du repo au lieu de `applisport`).
+
 ## Notes
 - Les services SMS/Email sont mockés (à implémenter selon fournisseur).
 - Les reçus et exports sont générés côté client.
