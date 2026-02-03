@@ -18,9 +18,11 @@ let sqlSingleton: ReturnType<typeof neon> | null = null
 
 export function getSql() {
   if (sqlSingleton) return sqlSingleton
-  const raw = process.env.DATABASE_URL
+  const raw = (process.env.DIRECT_URL && process.env.DIRECT_URL.trim().length > 0)
+    ? process.env.DIRECT_URL
+    : process.env.DATABASE_URL
   if (!raw || raw.trim().length === 0) {
-    throw new Error('DATABASE_URL is missing')
+    throw new Error('DATABASE_URL/DIRECT_URL is missing')
   }
   const connectionString = ensureVerifyFull(raw)
   sqlSingleton = neon(connectionString)
