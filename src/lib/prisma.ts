@@ -31,12 +31,22 @@ function createPrisma(): PrismaClient {
   const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
 
   if (isProd) {
-    neonConfig.fetchConnectionCache = true
-    const sql = neon(connectionString)
-    return new PrismaClient({
-      adapter: new PrismaNeon(sql as any) as any,
-      log: ['error', 'warn'],
-    })
+    // Use Neon fetch driver unless URL points to pooler host; then use pg Pool
+    const isPooler = /pooler\./i.test(connectionString)
+    if (isPooler) {
+      const pool = new Pool({ connectionString })
+      return new PrismaClient({
+        adapter: new PrismaPg(pool),
+        log: ['error', 'warn'],
+      })
+    } else {
+      neonConfig.fetchConnectionCache = true
+      const sql = neon(connectionString)
+      return new PrismaClient({
+        adapter: new PrismaNeon(sql as any) as any,
+        log: ['error', 'warn'],
+      })
+    }
   } else {
     const pool = new Pool({ connectionString })
     return new PrismaClient({
