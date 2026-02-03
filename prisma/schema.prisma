@@ -46,6 +46,7 @@ model SubscriptionSport {
   id        String                  @id @default(cuid())
   memberId  String
   type      SubscriptionTypeSport
+  source    SubscriptionSourceSport @default(CASHIER)
   startDate DateTime
   endDate   DateTime
   status    SubscriptionStatusSport @default(ACTIF)
@@ -160,6 +161,11 @@ enum SubscriptionStatusSport {
   ACTIF
   EXPIRE
   SUSPENDU
+}
+
+enum SubscriptionSourceSport {
+  REMOTE
+  CASHIER
 }
 
 enum PaymentMethodSport {
