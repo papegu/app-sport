@@ -24,12 +24,17 @@ async function finalize(sessionId: string) {
   return { ok: true, token, dataUrl }
 }
 
-export default async function PaymentStatusPage({ searchParams }: { searchParams?: Promise<{ status?: string; session?: string }> }) {
-  const { status, session } = (await searchParams) || {}
+export default async function PaymentStatusPage({ searchParams }: { searchParams?: { status?: string; session?: string } }) {
+  const status = searchParams?.status
+  const session = searchParams?.session
   let qr: { token?: string; dataUrl?: string } = {}
   if (status === 'success' && session) {
-    const res = await finalize(session)
-    if (res.ok) qr = { token: res.token, dataUrl: res.dataUrl }
+    try {
+      const res = await finalize(session)
+      if (res.ok) qr = { token: res.token, dataUrl: res.dataUrl }
+    } catch {
+      // swallow errors to avoid breaking the page
+    }
   }
   return (
     <div className="max-w-xl mx-auto p-6 space-y-4">
