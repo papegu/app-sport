@@ -14,9 +14,11 @@ function ensureSecureSSL(url: string): string {
 }
 
 function createPrisma(): PrismaClient {
-  const rawUrl = process.env.DATABASE_URL
+  const rawUrl = (process.env.DIRECT_URL && process.env.DIRECT_URL.trim().length > 0)
+    ? process.env.DIRECT_URL
+    : process.env.DATABASE_URL
   if (!rawUrl || rawUrl.trim().length === 0) {
-    throw new Error('DATABASE_URL is not set')
+    throw new Error('DATABASE_URL/DIRECT_URL is not set')
   }
   const connectionString = ensureSecureSSL(rawUrl)
   const isProd = process.env.NODE_ENV === 'production' || !!process.env.VERCEL
