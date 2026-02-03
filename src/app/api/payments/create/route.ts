@@ -45,8 +45,8 @@ export async function POST(req: Request) {
       data: { memberId, subscriptionId: subscription.id, amount: amount, method: 'PAYDUNYA', isPaid: false },
     })
     const base = process.env.APP_BASE_URL || process.env.NEXTAUTH_URL || ''
-    const returnUrl = `${base}/payments-status`
-    const callbackUrl = `${base}/api/payments/callback`
+    const returnUrl = process.env.PAYDUNYA_RETURN_URL || `${base}/payments-status`
+    const callbackUrl = process.env.PAYDUNYA_CALLBACK_URL || `${base}/api/payments/callback`
     const checkout = await createCheckout({ amount, description: `Paiement ${type}`, sessionId: payment.id, returnUrl, callbackUrl })
     return Response.json({ ok: true, url: checkout.url, session: payment.id })
   } catch (e) {
